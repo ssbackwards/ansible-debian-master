@@ -1,0 +1,38 @@
+# Ubuntu vars for docker
+
+docker_ce_repo_url: https://download.docker.com/linux/ubuntu
+#docker_ce_gpg_key: "{{ docker_ce_repo_url }}/gpg" | sudo apt-key add -
+docker_ce_gpg_key_id: 9DC8 5822 9FC7DD38854AE2D88D81803C0EBFCD88
+docker_ce_gpg_key_validate_certs: true
+docker_apt_repo_url: "deb [arch=amd64] {{ docker_ce_repo_url }} bionic stable"
+
+# Ubuntu vars for packages
+packages:
+ - net-tools
+ - git
+ - thunderbird
+ - firefox
+ - keepassxc
+ - vim
+ - tmux
+
+# Ubuntu vars for Pycharm
+
+pycharm_downloads_path: /home/ansible/packages
+pycharm_downloads_url: https://download.jetbrains.com/python/pycharm-community-2018.3.4.tar.gz
+pycharm_install_prefix: /opt 
+pycharm_edition: community
+pycharm_version: 2018.3.4
+
+# Ubuntu vars for Spotify
+
+spotify_repo_url: http://repository.spotify.com stable non-free
+spotify_keyserver_url: hkp://keyserver.ubuntu.com:80
+spotify_gpg_key_id: 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
+spotify_apt_repo_url: deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+
+# Ubuntu vars for VS Code
+
+vs_code_repo_key: 'https://packages.microsoft.com/keys/microsoft.asc'
+vs_code_repo_url: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+

@@ -1,0 +1,86 @@
+--- # Main PC Build Playbook - Packages, repos and keys including dependencies
+- hosts: debian
+  become: true
+
+  vars_files:
+  - all_vars
+
+  tasks:
+  - name: Update Apt Cache
+    apt:
+     update_cache: yes
+ 
+  - name: Install prerequisites for APT
+    apt:
+     name:
+     - python      
+     - apt-transport-https
+     - ca-certificates
+     - curl
+     state: present
+
+  - name: Download Docker GPG key (systems without SNI)
+    shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+
+  - name: Add Docker CE repository
+    apt_repository:
+     repo: " {{ docker_apt_repo_url }}"
+     state: present
+
+  - name: Install docker-ce
+    apt: name=docker-ce state=present
+
+  - name: Add Spotify repo key
+    apt_key:
+     keyserver: "{{ spotify_keyserver_url }}"
+     id: "{{ spotify_gpg_key_id }}"
+
+  - name: Add Spotify Repo
+    apt_repository:
+     repo: "{{ spotify_apt_repo_url }}"
+     state: present
+ 
+  - name: Install Spotify
+    apt: name=spotify-client
+    state: latest
+  
+  - name: Install packages
+    apt: name="{{ packages }}" state=latest
+
+  - name: create (download) directory
+    file:
+     path: "{{ pycharm_downloads_path }}"
+     state: directory
+     owner: root
+     group: root
+     mode: 0755
+  
+  - name: Download Pycharm
+    get_url:
+     url: "{{ pycharm_downloads_url }}"
+     dest: "{{ pycharm_downloads_path }}/pycharm-{{ pycharm_edition }}-{{ pycharm_version }}.tar.gz"
+     owner: root
+     group: root
+     mode: 0644
+
+  - name: Install Pycharm
+    unarchive:
+     src: "{{ pycharm_downloads_path }}/pycharm-{{ pycharm_edition }}-{{ pycharm_version }}.tar.gz"
+     dest: "{{ pycharm_install_prefix }}"
+     creates: "{{ pycharm_install_prefix }}/pycharm-{{ pycharm_edition }}-{{ pycharm_version }}"
+     remote_src: yes
+
+  - name: Add Visual Studio Code (VS) Repo Key
+    apt_key:
+     url: " {{ vs_code_repo_key }}" 
+     state: present
+
+  - name: Add VS Code Repo
+    apt_repository:
+     repo: " {{ vs_code_repo_url }}"
+     state: present
+
+  - name: Install VS Code
+    apt: name=code
+    state: present
+
