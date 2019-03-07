@@ -1,6 +1,6 @@
 # ansible-debian-master
 
-Full working debian workstation
+This is an Ansible playbook to install mostly used applications and settings 
 
 Prerequisities:
 - ansible user needs to be created on individual hosts that this playbook will be run on (permission elevated) - file added to /etc/sudoer.d <10-ansibleuser>
